@@ -42,6 +42,10 @@ public class DaoFactory {
 	public ClientDao getClientDao() {
 		return new ClientDaoImpl(this);
 	}
+	
+	public PaiementDao getPaiementDao() {
+		return new PaiementDaoImpl(this);
+	}
 
 	Connection getConnection() throws SQLException {
 		if (this.con == null) {
