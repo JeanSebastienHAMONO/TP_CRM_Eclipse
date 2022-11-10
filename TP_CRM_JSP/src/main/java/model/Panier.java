@@ -36,6 +36,6 @@ public class Panier {
 
 	@Override
 	public String toString() {
-		return "id: " + id + "; client: " + client.toString();
+		return "[" + this.getId() + "] " + this.getClient();
 	}
 }

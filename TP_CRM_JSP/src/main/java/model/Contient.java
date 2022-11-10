@@ -47,7 +47,7 @@ public class Contient {
 
 	@Override
 	public String toString() {
-		return "id: " + id + "; produit: " + produit.toString() + "; panier: " + panier.toString();
+		return "[" + this.getId() + "] " + this.getProduit() + " - " + this.getPanier();
 	}
 
 }

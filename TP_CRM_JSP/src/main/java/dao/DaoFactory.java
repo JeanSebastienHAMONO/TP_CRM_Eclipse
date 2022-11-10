@@ -51,6 +51,10 @@ public class DaoFactory {
 		return new ProduitDaoImpl(this);
 	}
 
+	public PanierDao getPanierDao() {
+		return new PanierDaoImpl(this);
+	}
+	
 	Connection getConnection() throws SQLException {
 		if (this.con == null) {
 			this.con = DriverManager.getConnection(url, username, passwd);

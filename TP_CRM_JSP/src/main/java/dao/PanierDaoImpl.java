@@ -8,70 +8,70 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Produit;
+import model.Panier;
 
-public class ProduitDaoImpl implements ProduitDao {
+public class PanierDaoImpl implements PanierDao {
 
-	private static final String SQL_INSERT = "INSERT INTO PRODUIT(NOM, DESCRIPTION, PRIX) VALUES(?,?,?)";
-	private static final String SQL_SELECT = "SELECT ID, NOM, DESCRIPTION, PRIX FROM PRODUIT";
+	private static final String SQL_INSERT = "INSERT INTO PANIER(ID_CLIENT) VALUES(?)";
+	private static final String SQL_SELECT = "SELECT ID, ID_CLIENT FROM PANIER";
 	private static final String SQL_SELECT_BY_ID = SQL_SELECT + " WHERE ID = ?";
-	private static final String SQL_DELETE_BY_ID = "DELETE FROM PRODUIT WHERE ID = ? ";
+	private static final String SQL_DELETE_BY_ID = "DELETE FROM PANIER WHERE ID = ? ";
 
-	private static final String SQL_UPDATE = "UPDATE PRODUIT SET NOM=?, DESCRIPTION=?, PRIX=? WHERE ID=?";
+	private static final String SQL_UPDATE = "UPDATE PANIER SET ID_CLIENT=? WHERE ID=?";
 
 	private DaoFactory factory;
 
-	public ProduitDaoImpl(DaoFactory factory) {
+	public PanierDaoImpl(DaoFactory factory) {
 		this.factory = factory;
 	}
 
 	@Override
-	public void creer(Produit produit) throws DaoException {
+	public void creer(Panier panier) throws DaoException {
 		Connection con = null;
 		try {
 			con = factory.getConnection();
 
 			PreparedStatement ps = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, produit.getNom());
-			ps.setString(2, produit.getDescription());
-			ps.setFloat(3, produit.getPrix());
+			ps.setLong(1, panier.getClient().getId());
 
 			int statut = ps.executeUpdate();
 
 			if (statut == 0) {
-				throw new DaoException("Echec creation Produit (aucun ajout)");
+				throw new DaoException("Echec creation Panier (aucun ajout)");
 			}
 
 			ResultSet rsKeys = ps.getGeneratedKeys();
 			if (rsKeys.next()) {
-				produit.setId(rsKeys.getLong(1));
+				panier.setId(rsKeys.getLong(1));
 			} else {
-				throw new DaoException("Echec creation Produit (ID non retourné)");
+				throw new DaoException("Echec creation Panier (ID non retourné)");
 			}
 
 			rsKeys.close();
 			ps.close();
 
 		} catch (SQLException ex) {
-			throw new DaoException("Echec creation Produit", ex);
+			throw new DaoException("Echec creation Panier", ex);
 		} finally {
 			factory.releaseConnection(con);
 		}
 
 	}
 
-	private static Produit map(ResultSet resultSet) throws SQLException {
-		Produit produit = new Produit();
-		produit.setId(resultSet.getLong("id"));
-		produit.setNom(resultSet.getString("nom"));
-		produit.setDescription(resultSet.getString("description"));
-		produit.setPrix(resultSet.getFloat("prix"));
-		return produit;
+	private static Panier map(ResultSet resultSet) throws SQLException {
+		Panier panier = new Panier();
+		panier.setId(resultSet.getLong("id"));
+		try {
+			panier.setClient(DaoFactory.getInstance().getClientDao().trouver(resultSet.getLong("id_client")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return panier;
 	}
 
 	@Override
-	public Produit trouver(long id) throws DaoException {
-		Produit produit = null;
+	public Panier trouver(long id) throws DaoException {
+		Panier panier = null;
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -81,37 +81,38 @@ public class ProduitDaoImpl implements ProduitDao {
 			ps.setLong(1, id);
 			rs = ps.executeQuery();
 			if (rs.next())
-				produit = map(rs);
+				panier = map(rs);
 
 			rs.close();
 			ps.close();
 		} catch (SQLException ex) {
-			throw new DaoException("Erreur de recherche BDD Produit", ex);
+			throw new DaoException("Erreur de recherche BDD Panier", ex);
 		} finally {
 			factory.releaseConnection(con);
 		}
-		return produit;
+		return panier;
 	}
 
 	@Override
-	public List<Produit> lister() throws DaoException {
-		List<Produit> listeProduits = new ArrayList<Produit>();
+	public List<Panier> lister() throws DaoException {
+		List<Panier> listePaniers = new ArrayList<Panier>();
 		Connection con = null;
 		try {
 			con = factory.getConnection();
 			PreparedStatement ps = con.prepareStatement(SQL_SELECT);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				listeProduits.add(map(rs));
+				listePaniers.add(map(rs));
 			}
 			rs.close();
 			ps.close();
 		} catch (SQLException ex) {
-			throw new DaoException("Erreur de lecture BDD Produit", ex);
+			throw new DaoException("Erreur de lecture BDD Panier", ex);
 		} finally {
 			factory.releaseConnection(con);
 		}
-		return listeProduits;
+		return listePaniers;
+
 	}
 
 	@Override
@@ -123,40 +124,37 @@ public class ProduitDaoImpl implements ProduitDao {
 			ps.setLong(1, id);
 			int statut = ps.executeUpdate();
 			if (statut == 0) {
-				throw new DaoException("Erreur de suppression Produit(" + id + ")");
+				throw new DaoException("Erreur de suppression Panier(" + id + ")");
 			}
 			ps.close();
 		} catch (SQLException ex) {
-			throw new DaoException("Erreur de suppression BDD Produit", ex);
+			throw new DaoException("Erreur de suppression BDD Panier", ex);
 		} finally {
 			factory.releaseConnection(con);
 		}
 
-
 	}
 
 	@Override
-	public void miseAJour(Produit produit) throws DaoException {
+	public void miseAJour(Panier panier) throws DaoException {
 		Connection con = null;
 		try {
 			con = factory.getConnection();
 
 			PreparedStatement ps = con.prepareStatement(SQL_UPDATE);
-			ps.setString(1, produit.getNom());
-			ps.setString(2, produit.getDescription());
-			ps.setFloat(3, produit.getPrix());
-			ps.setLong(4, produit.getId());
+			ps.setLong(1, panier.getClient().getId());
+			ps.setLong(2, panier.getId());
 
 			int statut = ps.executeUpdate();
 
 			if (statut == 0) {
-				throw new DaoException("Echec maj Produit (aucune maj)");
+				throw new DaoException("Echec maj Panier (aucune maj)");
 			}
 
 			ps.close();
 
 		} catch (SQLException ex) {
-			throw new DaoException("Echec maj Produit", ex);
+			throw new DaoException("Echec maj Panier", ex);
 		} finally {
 			factory.releaseConnection(con);
 		}
