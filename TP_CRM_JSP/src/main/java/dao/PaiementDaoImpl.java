@@ -159,7 +159,7 @@ public class PaiementDaoImpl implements PaiementDao {
 			int statut = ps.executeUpdate();
 
 			if (statut == 0) {
-				throw new DaoException("Echec maj Paiement (aucun ajout)");
+				throw new DaoException("Echec maj Paiement (aucune maj)");
 			}
 
 			ps.close();

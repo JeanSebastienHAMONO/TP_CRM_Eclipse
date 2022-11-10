@@ -59,6 +59,6 @@ public class Produit {
 
 	@Override
 	public String toString() {
-		return "id :" + id + "; nom: " + nom + "; description: " + description + "; prix: " + prix;
+		return "[" + this.getId() + "] " + this.getNom() + " - " + this.getDescription() + " - " + this.getPrix();
 	}
 }

@@ -152,7 +152,7 @@ public class AdresseDaoImpl implements AdresseDao {
 			int statut = ps.executeUpdate();
 
 			if (statut == 0) {
-				throw new DaoException("Echec maj Adresse (aucun ajout)");
+				throw new DaoException("Echec maj Adresse (aucune maj)");
 			}
 
 			ps.close();

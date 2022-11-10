@@ -171,7 +171,7 @@ public class ClientDaoImpl implements ClientDao {
 			int statut = ps.executeUpdate();
 
 			if (statut == 0) {
-				throw new DaoException("Echec maj Client (aucun ajout)");
+				throw new DaoException("Echec maj Client (aucune maj)");
 			}
 
 			ps.close();
