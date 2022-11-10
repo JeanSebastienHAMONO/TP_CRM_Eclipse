@@ -69,6 +69,6 @@ public class Adresse {
 
 	@Override
 	public String toString() {
-		return "id: " + id + "; rue: " + rue + "; ville: " + ville + "; pays: " + pays + "; code postal: " + codePostal;
+		return "[" + this.getId() + "] " + this.getRue() + " " + this.getCodePostal() + " " + this.getVille() + " " + this.getPays();
 	}
 }
