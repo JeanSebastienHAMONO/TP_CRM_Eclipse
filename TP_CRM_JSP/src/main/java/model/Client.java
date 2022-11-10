@@ -114,8 +114,6 @@ public class Client {
 
 	@Override
 	public String toString() {
-		return "id: " + id + "; nom: " + nom + "; prénom: " + prenom + "; mail: " + mail + "; nom société: "
-				+ nomSociete + "; telephone: " + telephone + "; etat: " + etat + "; genre: " + genre + "; adresse: "
-				+ adresse.toString();
+		return "[" + this.getId() + "] " + this.getNomSociete() + " - " + this.getMail() + " - " + this.getNom() + " " + this.getPrenom() + " - " + this.telephone + " - " + this.getEtat() + " - " + this.getGenre() + " - " + adresse.toString();
 	}
 }

@@ -38,6 +38,10 @@ public class DaoFactory {
 	public AdresseDao getAdresseDao() {
 		return new AdresseDaoImpl(this);
 	}
+	
+	public ClientDao getClientDao() {
+		return new ClientDaoImpl(this);
+	}
 
 	Connection getConnection() throws SQLException {
 		if (this.con == null) {
