@@ -35,9 +35,9 @@ public class DaoFactory {
 		return DaoFactory.instanceSingleton;
 	}
 
-	/*
-	 * public AuteurDao getAuteurDao() { return new AuteurDaoImpl(this); }
-	 */
+	public AdresseDao getAdresseDao() {
+		return new AdresseDaoImpl(this);
+	}
 
 	Connection getConnection() throws SQLException {
 		if (this.con == null) {
