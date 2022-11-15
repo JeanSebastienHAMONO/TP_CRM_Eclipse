@@ -33,8 +33,8 @@
                        <button type="button" class="btn btn-outline-warning fw-bold">Paniers</button>
                     </a>
 
-                    <a class="navbar-brand" href="<c:url value="/ListProduits"></c:url>">
-                       <button type="button" class="btn btn-outline-warning fw-bold">Produits</button>
+                    <a class="navbar-brand" href="<c:url value="/listProduits"></c:url>">
+                       <button type="button" class="btn btn-outline-success fw-bold">Produits</button>
                     </a>
                     
                 </div>
